@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { getAllPokemon, getPokemon } from "./components/pokemon"
+import { Card } from '../components/Card';
+import { getAllPokemon, getPokemon } from "../components/pokemon"
 
 interface pokemonData {
   map(arg0: (pokemon: pokemonData) => Promise<unknown>): any;
@@ -47,7 +48,11 @@ export default function Home() {
     {loading ? (
       <h1>ロード中・・・</h1>
     ) : (
-      <h1>ポケモンデータを取得しました</h1>
+      <div className="pokemonCardContainer">
+        {pokemonData.map((pokemon, i) => {
+          return <Card key={i} pokemon={pokemon} />;
+        })}
+      </div>
     )}
 
     </div>
