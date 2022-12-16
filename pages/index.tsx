@@ -2,25 +2,32 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { getAllPokemon, getPokemon } from "./components/pokemon"
 
+interface pokemonData {
+  map(arg0: (pokemon: pokemonData) => Promise<unknown>): any;
+  name: string; 
+  url: string;
+}
+
 export default function Home() {
   const initialURL: string = "https://pokeapi.co/api/v2/pokemon";
   const [loading, setLoading] = useState(true);
-  const [pokemonData, setPokemonData] = useState([]);
+  const [pokemonData, setPokemonData] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchPokemonData = async() => {
       // 全てのポケモンデータを取得
-      let res = await getAllPokemon(initialURL);
+      let res: unknown = await getAllPokemon(initialURL);
       // 各ポケモンの詳細なデータを取得
+      // console.log(res);
       loadPokemon(res.results);
       setLoading(false);
     }
     fetchPokemonData();
   }, [])
 
-  const loadPokemon = async (data) => {
+  const loadPokemon = async (data: pokemonData) => {
     let _pokemonData = await Promise.all(
-      data.map((pokemon) => {
+      data.map((pokemon: pokemonData) => {
         let pokemonRecord = getPokemon(pokemon.url);
         return pokemonRecord;
       })
@@ -28,7 +35,7 @@ export default function Home() {
     setPokemonData(_pokemonData);
   }
 
-  console.log(pokemonData);
+  // console.log(pokemonData);
 
   return (
     <div>
