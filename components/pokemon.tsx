@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export const getAllPokemon = (url: string) => {
   return new Promise((resolve, reject) => {
     fetch(url)
