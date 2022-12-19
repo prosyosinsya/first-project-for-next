@@ -17,13 +17,16 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [pokemonData, setPokemonData] = useState<string[]>([]);
   const [nextPokemon, setNextPokemon] = useState("");
+  const [prevPokemon, setPrevPokemon] = useState("");
 
   useEffect(() => {
     const fetchPokemonData = async() => {
+      setLoading(true);
       // 全てのポケモンデータを取得
       let res: unknown = await getAllPokemon(initialURL);
       // 各ポケモンの詳細なデータを取得
       setNextPokemon(res.next);
+      setPrevPokemon(res.previous);
       loadPokemon(res.results);
       setLoading(false);
     }
@@ -64,6 +67,9 @@ const Home = () => {
         setLoading={setLoading} 
         nextPokemon={nextPokemon} 
         loadPokemon={loadPokemon}
+        setNextPokemon={setNextPokemon}
+        prevPokemon={prevPokemon}
+        setPrevPokemon={setPrevPokemon}
       />
     </div>
   )
