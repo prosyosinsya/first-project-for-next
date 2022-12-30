@@ -1,12 +1,37 @@
-import React from 'react'
+import React, {Dispatch, SetStateAction} from 'react'
 import { getAllPokemon, getPokemon } from './pokemon'
 import styles from "./Button.module.css"
 
-const Button = ({ setLoading, nextPokemon, loadPokemon, setNextPokemon, prevPokemon, setPrevPokemon }) => {
+interface pokemonData {
+  count: number, 
+  next: string, 
+  previous: string,
+  results: [{
+    name: string,
+    url: string
+  }]
+}
 
+interface Props {
+  setLoading: Dispatch<SetStateAction<boolean>>;  
+  loadPokemon: Function;
+  nextPokemon: string; 
+  setNextPokemon: Dispatch<SetStateAction<string>>; 
+  prevPokemon: string;
+  setPrevPokemon: Dispatch<SetStateAction<string>>; 
+}
+
+const Button = ({ 
+  setLoading, 
+  loadPokemon, 
+  nextPokemon, 
+  setNextPokemon, 
+  prevPokemon, 
+  setPrevPokemon 
+}: Props) => {
   const handleNextPage = async () => {
     setLoading(true)
-    let data = await getAllPokemon(nextPokemon);
+    let data: pokemonData  = await getAllPokemon(nextPokemon);
     await loadPokemon(data.results);
     setNextPokemon(data.next);
     setPrevPokemon(data.previous);
@@ -16,7 +41,7 @@ const Button = ({ setLoading, nextPokemon, loadPokemon, setNextPokemon, prevPoke
   const handlePrevPage = async () => {
     if(!prevPokemon) return;
     setLoading(true)
-    let data = await getAllPokemon(prevPokemon);
+    let data: pokemonData = await getAllPokemon(prevPokemon);
     await loadPokemon(data.results);
     setNextPokemon(data.next);
     setPrevPokemon(data.previous);

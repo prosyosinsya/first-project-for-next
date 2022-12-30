@@ -1,7 +1,38 @@
 import React from 'react'
 import styles from "./Card.module.css"
 
-export const Card = ({ pokemon }) => {
+interface pokemon {
+  pokemon: {
+    sprites: {
+      front_default: string
+    },
+    name: string,
+    types: [{
+      slot: number,
+      type: {
+        name: string,
+        url: string
+      }
+    }],
+    weight: number,
+    height: number,
+    abilities: [{
+      ability: {
+        name: string
+      }
+    }]
+  }
+}
+
+interface pokemonType {
+  slot: number,
+  type: {
+    name: string,
+    url: string
+  }
+}
+
+export const Card = ({ pokemon }: pokemon) => {
   return (
     <div className={styles.card}>
       <div className="cardImg">
@@ -10,7 +41,7 @@ export const Card = ({ pokemon }) => {
       <h3 className={styles.cardName}>{pokemon.name}</h3>
       <div className="cardTypes">
         <div>タイプ</div>
-        {pokemon.types.map((type) => {
+        {pokemon.types.map((type: pokemonType) => {
           return <div key={type.type.name}>
             <span className='typeName'>{type.type.name}</span>
           </div>

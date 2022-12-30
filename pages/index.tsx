@@ -4,18 +4,26 @@ import Button from '../components/Button';
 import { Card } from '../components/Card';
 import Navbar from '../components/Navbar';
 import { getAllPokemon, getPokemon } from "../components/pokemon"
-import { loadPokemon } from "../components/Button"
 
 interface pokemonData {
-  map(arg0: (pokemon: pokemonData) => Promise<unknown>): any;
-  name: string; 
-  url: string;
+  count: number, 
+  next: string, 
+  previous: string,
+  results: [{
+    name: string,
+    url: string
+  }]
+}
+
+interface resData {
+  name: string,
+  url: string
 }
 
 const Home = () => {
   const initialURL: string = "https://pokeapi.co/api/v2/pokemon";
   const [loading, setLoading] = useState(true);
-  const [pokemonData, setPokemonData] = useState<string[]>([]);
+  const [pokemonData, setPokemonData] = useState([]);
   const [nextPokemon, setNextPokemon] = useState("");
   const [prevPokemon, setPrevPokemon] = useState("");
 
@@ -23,7 +31,8 @@ const Home = () => {
     const fetchPokemonData = async() => {
       setLoading(true);
       // 全てのポケモンデータを取得
-      let res: unknown = await getAllPokemon(initialURL);
+      let res: pokemonData = await getAllPokemon(initialURL);
+      // console.log(res);
       // 各ポケモンの詳細なデータを取得
       setNextPokemon(res.next);
       setPrevPokemon(res.previous);
@@ -33,17 +42,18 @@ const Home = () => {
     fetchPokemonData();
   }, [])
 
-  const loadPokemon = async (data: pokemonData) => {
+  const loadPokemon = async (data: [resData]) => {
     let _pokemonData = await Promise.all(
-      data.map((pokemon: pokemonData) => {
+      data.map((pokemon) => {
         let pokemonRecord = getPokemon(pokemon.url);
         return pokemonRecord;
       })
     );
     setPokemonData(_pokemonData);
+    console.log(_pokemonData);
   }
 
-  console.log(nextPokemon);
+  // console.log(pokemonData);
 
   return (
     <div>
@@ -65,8 +75,8 @@ const Home = () => {
       )}
       <Button 
         setLoading={setLoading} 
-        nextPokemon={nextPokemon} 
         loadPokemon={loadPokemon}
+        nextPokemon={nextPokemon} 
         setNextPokemon={setNextPokemon}
         prevPokemon={prevPokemon}
         setPrevPokemon={setPrevPokemon}
